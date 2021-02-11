@@ -5,12 +5,22 @@ import { useTheme } from "next-themes";
 import cn from "classnames";
 import Link from "next/link";
 
-export function Layout({ children }) {
+export function BlogLayout({ children }) {
 	return (
-		<div className="w-full min-h-screen dark:bg-gray-700 dark:text-white">
+		<div className="w-full min-h-screen dark:bg-gray-600 dark:text-white">
 			<div className="max-w-screen-sm px-4 py-12 mx-auto antialiased font-body">
 				<Header />
 				<main>{children}</main>
+				<div className="flex justify-end">
+					<Link href="/">
+						<a
+							href="/"
+							className="text-black dark:text-white font-display no-underline text-lg font-black"
+						>
+							← Back To home
+						</a>
+					</Link>
+				</div>
 			</div>
 		</div>
 	);
@@ -20,18 +30,15 @@ const Header = () => {
 	const { setTheme, resolvedTheme } = useTheme();
 	const { pathname } = useRouter();
 	const [mounted, setMounted] = useState(false);
-
 	useEffect(() => setMounted(true), []);
-
 	const toggleDarkMode = (checked) => {
 		const isDarkMode = checked;
 		if (isDarkMode) setTheme("dark");
 		else setTheme("light");
 	};
 
-	const isRoot = pathname === "/";
+	const isRoot = pathname === "/blog";
 	const isDarkMode = resolvedTheme === "dark";
-
 	return (
 		<header
 			className={cn("flex items-center justify-between ", {
@@ -39,7 +46,7 @@ const Header = () => {
 				"mb-2": !isRoot,
 			})}
 		>
-			<div className="max-w-md">{isRoot ? <LargeTitle /> : <SmallTitle />}</div>
+			<div className="max-w-md">{isRoot ? <Title big /> : <Title />}</div>
 			{mounted && (
 				<DarkModeSwitch
 					checked={isDarkMode}
@@ -51,29 +58,13 @@ const Header = () => {
 	);
 };
 
-const LargeTitle = () => (
+const Title = ({ big }) => (
 	<h1>
-		<Link href="/">
+		<Link href="/blog/">
 			<a
 				className={cn(
-					"text-3xl font-black leading-none text-black no-underline font-display",
-					"sm:text-5xl",
-					"dark:text-white"
-				)}
-			>
-				Personal Blog
-			</a>
-		</Link>
-	</h1>
-);
-
-const SmallTitle = () => (
-	<h1>
-		<Link href="/">
-			<a
-				className={cn(
-					"text-2xl font-black text-black no-underline font-display",
-					"dark:text-white"
+					"text-black dark:text-white font-display no-underline font-black",
+					big ? "text-3xl leading-none  sm:text-5xl " : "text-2xl"
 				)}
 			>
 				Personal Blog
